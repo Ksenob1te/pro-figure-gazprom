@@ -1,0 +1,10 @@
+.idea
+.venv
+__pycache__
+*.pyc
+.*
+!.gitignore
+/logger.log
+/**/alembic/versions/
+/database/
+/.local/

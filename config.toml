@@ -1,0 +1,2 @@
+[alembic]
+repository = "src/postgre/alembic.ini"
