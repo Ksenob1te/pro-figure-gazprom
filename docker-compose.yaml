@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5434:5432"
+      - "25432:5432"
 
   redis:
     image: redis:latest
@@ -21,4 +21,4 @@ services:
     volumes:
       - ./.redis_data:/data
     ports:
-      - "6379:6379"
+      - "26379:6379"
