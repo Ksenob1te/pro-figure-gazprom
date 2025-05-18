@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: pro-figure-gazprom
+Version: 0.1.0
+Summary: Add your description here
+Requires-Python: >=3.13
+Description-Content-Type: text/markdown
+Requires-Dist: alembic>=1.15.2
+Requires-Dist: fastapi-controllers>=0.3.0
+Requires-Dist: fastapi[all]>=0.115.12
+Requires-Dist: pydantic>=2.11.4
+Requires-Dist: pydantic-settings>=2.9.1
+Requires-Dist: redis>=6.1.0
+Requires-Dist: sqlalchemy>=2.0.41

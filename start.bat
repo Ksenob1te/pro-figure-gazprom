@@ -1,0 +1,1 @@
+uv run uvicorn backend.app:app
