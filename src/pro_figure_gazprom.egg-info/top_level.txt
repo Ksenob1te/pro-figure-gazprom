@@ -1,3 +1,0 @@
-backend
-postgre_module
-redis_module
