@@ -11,7 +11,7 @@ from alembic import context
 # access to the values within the .ini file in use.
 config = context.config
 
-from env import env as env_config
+from settings import APP_SETTINGS as env_config
 config.set_main_option('sqlalchemy.url', env_config.postgres.url)
 
 # Interpret the config file for Python logging.

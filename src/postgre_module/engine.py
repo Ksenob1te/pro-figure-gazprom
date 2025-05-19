@@ -4,14 +4,14 @@ from typing import Any, AsyncIterator
 from sqlalchemy.ext.asyncio import (AsyncConnection, AsyncSession,
                                     async_sessionmaker, create_async_engine)
 from sqlalchemy.orm import DeclarativeBase
-from env import env
+from settings import APP_SETTINGS
 
 
 class Base(DeclarativeBase):
     pass
 
 
-connect_string = env.postgres.url
+connect_string = APP_SETTINGS.postgres.url
 
 
 class DatabaseSessionManager:
@@ -63,8 +63,3 @@ sessionmanager = DatabaseSessionManager(connect_string, {"echo": False})
 async def get_db_session():
     async with sessionmanager.session() as session:
         yield session
-
-
-async def create_db_and_tables():
-    async with sessionmanager.connect() as conn:
-        await conn.run_sync(Base.metadata.create_all)

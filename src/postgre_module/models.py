@@ -14,20 +14,17 @@ class User(Base):
     __tablename__ = "user_table"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    chat_id: Mapped[str] = mapped_column(unique=True)
-    username: Mapped[str] = mapped_column(nullable=True)
-    first_name: Mapped[str] = mapped_column(nullable=True)
-    last_name: Mapped[str] = mapped_column(nullable=True)
+    #chat_id: Mapped[str] = mapped_column(unique=True)
+    hashed_password: Mapped[str]
+    username: Mapped[str]
+    #first_name: Mapped[str] = mapped_column(nullable=True)
+    #last_name: Mapped[str] = mapped_column(nullable=True)
 
     # role_id: Mapped[Optional[UUID]] = mapped_column(ForeignKey("role_table.id"))
     # role: Mapped[Optional["Role"]] = relationship(lazy="selectin")
 
-    media_update: Mapped[bool] = mapped_column(nullable=False, default=False)
-    price_update: Mapped[bool] = mapped_column(nullable=False, default=False)
-
-    def __repr__(self) -> str:
-        return (f"User(id={self.id}, chat_id={self.chat_id}, username={self.username},"
-                f" first_name={self.first_name}, last_name={self.last_name})")
+    #media_update: Mapped[bool] = mapped_column(nullable=False, default=False)
+    #price_update: Mapped[bool] = mapped_column(nullable=False, default=False)
 
 
 # class Permission(Base):

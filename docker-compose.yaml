@@ -4,7 +4,7 @@ services:
     restart: always
     shm_size: 128mb
     volumes:
-      - ./.postgres:/var/lib/postgresql/data
+      - ./.local/.postgres:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: "redditrot"
       POSTGRES_USER: "postgres"
@@ -19,6 +19,6 @@ services:
       REDIS_USER: "redis"
       REDIS_PASSWORD: ${REDIS_PASSWORD}
     volumes:
-      - ./.redis_data:/data
+      - ./.local/.redis_data:/data
     ports:
       - "26379:6379"

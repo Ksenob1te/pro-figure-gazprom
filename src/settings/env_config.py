@@ -19,12 +19,15 @@ class RedisConfig(BaseModel):
     user: str = Field(default="default", alias="REDIS_USER")
     password: str = Field(default="redis", alias="REDIS_PASSWORD")
 
+class TTLConfig(BaseModel):
+    auth_token_expire: int = Field(default=60*60*24*30, alias="REDIS_PORT") # in seconds
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=('.env.prod', '.env.local'), extra="ignore")
 
     postgres: PostgresConfig = PostgresConfig()
     redis: RedisConfig = RedisConfig()
+    ttl: TTLConfig = TTLConfig()
 
 
-env = Settings()
+APP_SETTINGS = Settings()
