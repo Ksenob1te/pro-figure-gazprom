@@ -38,8 +38,10 @@ class AuthController(Controller):
         return {"message": "OK"}
 
     @post("/logout")
-    async def logout(self, user: GetUser):
+    async def logout(self, user: GetUser, response: Response):
         await self.user_service.logout(user.token)
+        response.delete_cookie("token")
+        return {"message": "OK"}
 
     @post("/registration")
     async def registration(self, data: SignUpRequest):

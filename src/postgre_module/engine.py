@@ -13,7 +13,6 @@ class Base(DeclarativeBase):
 
 connect_string = APP_SETTINGS.postgres.url
 
-
 class DatabaseSessionManager:
     def __init__(self, host: str, engine_kwargs: dict[str, Any] | None = None):
         if engine_kwargs is None:
@@ -50,6 +49,7 @@ class DatabaseSessionManager:
         session = self._sessionmaker()
         try:
             yield session
+            await session.commit()
         except Exception:
             await session.rollback()
             raise

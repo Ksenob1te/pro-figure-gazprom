@@ -22,9 +22,11 @@ async def setup_redis_pool():
 
 
 async def free_redis_pool():
+    global REDIS_POOL
     if REDIS_POOL is None:
         return
     await REDIS_POOL.aclose()
+    REDIS_POOL = None
 
 
 async def get_redis_client():

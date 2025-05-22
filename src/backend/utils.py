@@ -29,4 +29,4 @@ async def get_user(user: GetOptionalUser) -> SessionData:
         raise HTTPException(401, "Not authenticated")
     return user
 
-GetUser = Annotated[SessionData, get_user]
+GetUser = Annotated[SessionData, Depends(get_user)]

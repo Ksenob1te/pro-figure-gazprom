@@ -19,14 +19,14 @@ class UserService():
         username_checking = await self.user_repository.get_by_username(data.username)
         if username_checking is not None:
             raise UserAlreadyExists
-        user = self.user_repository.create(data.username, data.password)
+        user = await self.user_repository.create(data.username, data.password)
         return user
 
     async def login(self, data: LogInRequest) -> LogInAnswer:
         user = await self.user_repository.get_by_username(data.username)
         if user is None:
             raise UserDontExists
-        if not self.user_repository.check_password(user, data.password):
+        if not await self.user_repository.check_password(user, data.password):
             raise WrongPassword
         token = uuid.uuid4().hex
         await self.redis_repository.set_session_token(token,

@@ -6,8 +6,8 @@ services:
     volumes:
       - ./.local/.postgres:/var/lib/postgresql/data
     environment:
-      POSTGRES_DB: "redditrot"
-      POSTGRES_USER: "postgres"
+      POSTGRES_DB: ${POSTGRES_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "25432:5432"
@@ -15,9 +15,6 @@ services:
   redis:
     image: redis:latest
     restart: always
-    environment:
-      REDIS_USER: "redis"
-      REDIS_PASSWORD: ${REDIS_PASSWORD}
     volumes:
       - ./.local/.redis_data:/data
     ports:
