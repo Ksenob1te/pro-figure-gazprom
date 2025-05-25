@@ -6,7 +6,7 @@ class PostgresConfig(BaseModel):
     port: int = 5432
     user: str = "postgres"
     password: str = "postgres"
-    name: str = "redditrot"
+    name: str = "pro-figure"
 
     @property
     def url(self) -> str:
