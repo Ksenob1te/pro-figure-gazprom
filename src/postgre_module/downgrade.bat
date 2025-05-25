@@ -1,0 +1,1 @@
+uv run alembic -c ./src/postgre_module/alembic.ini downgrade base

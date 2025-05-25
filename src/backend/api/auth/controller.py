@@ -1,4 +1,5 @@
 from backend.api.auth.models import LogInRequest, SignUpRequest, UserInfo
+from backend.dependencies import UserServiceDepends
 from backend.utils import GetDBSession, GetOptionalUser, GetRedisClient, GetUser
 from domain.services.user.service import UserService
 from fastapi import Response
@@ -13,16 +14,13 @@ class AuthController(Controller):
     prefix = "/auth"
     tags = ["auth"]
 
-    def __init__(self, session: GetDBSession, redis: GetRedisClient) -> None:
+    def __init__(self, user_service: UserServiceDepends) -> None:
         super().__init__()
-        user_repository = UserRepository(session)
-        redis_repository = RedisRepository(redis)
-
-        self.user_service = UserService(user_repository, redis_repository)
+        self.user_service = user_service
 
     @get("", response_model=UserInfo)
     async def get_user_info(self, user: GetUser):
-        return UserInfo(user_id=user.user_id)
+        return UserInfo(user_id=user.user_id, permissions=user.permissions, role=user.role)
 
     @post("/login")
     async def login(self, data: LogInRequest, response: Response):

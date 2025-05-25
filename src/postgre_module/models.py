@@ -19,6 +19,8 @@ class User(Base):
     hashed_password: Mapped[str]
     username: Mapped[str]
     email: Mapped[str] = mapped_column(unique=True, nullable=True)
+    role_id: Mapped[UUID] = mapped_column(ForeignKey("role_table.id"), unique=True)
+    role: Mapped["Role"] = relationship(lazy="selectin")
 
     def __repr__(self) -> str:
         return f"User(id={self.id}, username={self.username}, email={self.email})"
@@ -74,38 +76,38 @@ class UserAchievement(Base):
 
 
 
-# class Permission(Base):
-#     __tablename__ = "permission_table"
+class Permission(Base):
+    __tablename__ = "permission_table"
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    name: Mapped[str] = mapped_column(unique=True)
+
+    def __repr__(self) -> str:
+        return f"Permission(id={self.id}, name={self.name})"
+
+
+class Role(Base):
+    __tablename__ = "role_table"
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    name: Mapped[str] = mapped_column(unique=True)
+
+    def __repr__(self) -> str:
+        return f"Role(id={self.id}, name={self.name})"
 #
-#     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-#     name: Mapped[str] = mapped_column(unique=True)
 #
-#     def __repr__(self) -> str:
-#         return f"Permission(id={self.id}, name={self.name})"
-#
-#
-# class Role(Base):
-#     __tablename__ = "role_table"
-#
-#     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-#     name: Mapped[str] = mapped_column(unique=True)
-#
-#     def __repr__(self) -> str:
-#         return f"Role(id={self.id}, name={self.name})"
-#
-#
-# class RolePerm(Base):
-#     __tablename__ = "role_perm_table"
-#
-#     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-#     role_id: Mapped[UUID] = mapped_column(ForeignKey("role_table.id"))
-#     permission_id: Mapped[UUID] = mapped_column(ForeignKey("permission_table.id"))
-#
-#     role: Mapped[Role] = relationship(lazy="selectin")
-#     perm: Mapped[Permission] = relationship(lazy="selectin")
-#
-#     def __repr__(self):
-#         return f"RolePerm(id={self.id}, role_id={self.role_id}, perm_id={self.permission_id})"
+class RolePerm(Base):
+    __tablename__ = "role_perm_table"
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    role_id: Mapped[UUID] = mapped_column(ForeignKey("role_table.id"))
+    permission_id: Mapped[UUID] = mapped_column(ForeignKey("permission_table.id"))
+
+    role: Mapped[Role] = relationship(lazy="selectin")
+    perm: Mapped[Permission] = relationship(lazy="selectin")
+
+    def __repr__(self):
+        return f"RolePerm(id={self.id}, role_id={self.role_id}, perm_id={self.permission_id})"
 
 #
 # class League(Base):

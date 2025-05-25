@@ -12,3 +12,6 @@ class PasswordsDontMatch(DomainException):
 
 class UserDontExists(DomainException):
     pass
+
+class UserRolesNotCreated(DomainException):
+    pass
