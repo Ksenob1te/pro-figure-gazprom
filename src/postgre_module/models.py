@@ -39,25 +39,8 @@ class UserStats(Base):
                 f"user_id={self.user_id})")
 
 
-class UserAchievement(Base):
-    __tablename__ = "user_achievement"
-
-    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    date_earned: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.now)
-
-    user_stats_id: Mapped[UUID] = mapped_column(ForeignKey("user_stats.id"))
-    user_stats: Mapped["UserStats"] = relationship(lazy="selectin")
-
-    achievement_id: Mapped[UUID] = mapped_column(ForeignKey("achievement.id"))
-    achievement: Mapped["Achievement"] = relationship(lazy="selectin")
-
-    def __repr__(self) -> str:
-        return (f"UserAchievement(id={self.id}, date_earned={self.date_earned}, "
-                f"user_stats_id={self.user_stats_id}, achievement_id={self.achievement_id})")
-
-
 class Achievement(Base):
-    __tablename__ = "achievement"
+    __tablename__ = "achievement_table"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
     code: Mapped[str] = mapped_column(unique=True)
@@ -69,6 +52,25 @@ class Achievement(Base):
 
     def __repr__(self) -> str:
             return f"Achievement(id={self.id}, code={self.code}, name={self.name})"
+
+
+class UserAchievement(Base):
+    __tablename__ = "user_achievement"
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    date_earned: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.now)
+
+    user_stats_id: Mapped[UUID] = mapped_column(ForeignKey("user_stats_table.id"))
+    user_stats: Mapped["UserStats"] = relationship(lazy="selectin")
+
+    achievement_id: Mapped[UUID] = mapped_column(ForeignKey("achievement_table.id"))
+    achievement: Mapped["Achievement"] = relationship(lazy="selectin")
+
+    def __repr__(self) -> str:
+        return (f"UserAchievement(id={self.id}, date_earned={self.date_earned}, "
+                f"user_stats_id={self.user_stats_id}, achievement_id={self.achievement_id})")
+
+
 
 
 # class Permission(Base):
