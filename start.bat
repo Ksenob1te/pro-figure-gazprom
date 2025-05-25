@@ -1,1 +1,1 @@
-uv run uvicorn backend.app:app
+uv run uvicorn backend.app:app --reload

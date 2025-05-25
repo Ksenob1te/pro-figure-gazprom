@@ -2,6 +2,7 @@ from typing import Optional
 
 from sqlalchemy import JSON, PickleType, ForeignKey, Table, Column, DateTime
 from uuid import uuid4, UUID
+from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.ext.mutable import MutableList
 from . import Base
@@ -17,7 +18,7 @@ class User(Base):
     #chat_id: Mapped[str] = mapped_column(unique=True)
     hashed_password: Mapped[str]
     username: Mapped[str]
-    email: Mapped[str]
+    email: Mapped[str] = mapped_column(unique=True, nullable=True)
 
     def __repr__(self) -> str:
         return f"User(id={self.id}, username={self.username}, email={self.email})"
@@ -58,7 +59,7 @@ class UserAchievement(Base):
     __tablename__ = "user_achievement"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
-    date_earned: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.now)
+    date_earned: Mapped[datetime.datetime] = mapped_column(default=func.now())
 
     user_stats_id: Mapped[UUID] = mapped_column(ForeignKey("user_stats_table.id"))
     user_stats: Mapped["UserStats"] = relationship(lazy="selectin")

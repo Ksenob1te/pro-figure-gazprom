@@ -18,8 +18,8 @@ class UserStatsRepository:
         stmt = select(UserStats).where(UserStats.user_id == user_id)
         return await self.session.scalar(stmt)
 
-    async def create(self, user_id: UUID) -> None:
+    async def create(self, user_id: UUID) -> UUID:
         user_stats = UserStats(user_id=user_id)
         self.session.add(user_stats)
         await self.session.flush()
-        return None
+        return user_stats.id

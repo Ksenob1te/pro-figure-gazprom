@@ -34,18 +34,29 @@ class AchievementRepository:
 
         user_achievement = UserAchievement(
             user_stats_id=user_stats.id,
-            achievement_id=achievement.id,
-            date_earned=datetime.datetime.now(tz=datetime.timezone.utc),
+            achievement_id=achievement.id
         )
         self.session.add(user_achievement)
-
-        user_stats.experience += achievement.experience_reward
-
         await self.session.flush()
         return True
 
     async def get_user_achievements(self, user_stats_id: UUID) -> list[UserAchievement]:
         stmt = select(UserAchievement).where(UserAchievement.user_stats_id == user_stats_id)
+        result = await self.session.scalars(stmt)
+        return list(result)
+
+    async def get_user_achievements_list(self, user_stats_id: UUID) -> list[Achievement]:
+        stmt = (
+            select(Achievement)
+            .join(UserAchievement, UserAchievement.achievement_id == Achievement.id)
+            .where(UserAchievement.user_stats_id == user_stats_id)
+        )
+        result = await self.session.scalars(stmt)
+        return list(result)
+
+    async def get_unearned_achievements(self, user_stats_id: UUID) -> list[Achievement]:
+        earned_stmt = select(UserAchievement.achievement_id).where(UserAchievement.user_stats_id == user_stats_id)
+        stmt = select(Achievement).where(~Achievement.id.in_(earned_stmt))
         result = await self.session.scalars(stmt)
         return list(result)
 
@@ -70,11 +81,11 @@ class AchievementRepository:
         await self.session.flush()
 
     async def create(self, code: str, name: str, description: str,
-                     experience_reward: int = 0, is_hidden: bool = False) -> None:
+                     experience_reward: int = 0, is_hidden: bool = False) -> UUID:
         achievement = Achievement(
             code=code, name=name, description=description,
             experience_reward=experience_reward, is_hidden=is_hidden
         )
         self.session.add(achievement)
         await self.session.flush()
-        return None
+        return achievement.id
