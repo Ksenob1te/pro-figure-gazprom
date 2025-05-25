@@ -17,14 +17,58 @@ class User(Base):
     #chat_id: Mapped[str] = mapped_column(unique=True)
     hashed_password: Mapped[str]
     username: Mapped[str]
-    #first_name: Mapped[str] = mapped_column(nullable=True)
-    #last_name: Mapped[str] = mapped_column(nullable=True)
+    email: Mapped[str]
 
-    # role_id: Mapped[Optional[UUID]] = mapped_column(ForeignKey("role_table.id"))
-    # role: Mapped[Optional["Role"]] = relationship(lazy="selectin")
+    def __repr__(self) -> str:
+        return f"User(id={self.id}, username={self.username}, email={self.email})"
 
-    #media_update: Mapped[bool] = mapped_column(nullable=False, default=False)
-    #price_update: Mapped[bool] = mapped_column(nullable=False, default=False)
+
+class UserStats(Base):
+    __tablename__ = "user_stats_table"
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+
+    level: Mapped[int] = mapped_column(default=1)
+    experience: Mapped[int] = mapped_column(default=0)
+
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("user_table.id"), unique=True)
+    user: Mapped["User"] = relationship(lazy="selectin")
+
+    def __repr__(self) -> str:
+        return (f"UserStats(id={self.id}, level={self.level}, experience={self.experience}, "
+                f"user_id={self.user_id})")
+
+
+class UserAchievement(Base):
+    __tablename__ = "user_achievement"
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    date_earned: Mapped[datetime.datetime] = mapped_column(default=datetime.datetime.now)
+
+    user_stats_id: Mapped[UUID] = mapped_column(ForeignKey("user_stats.id"))
+    user_stats: Mapped["UserStats"] = relationship(lazy="selectin")
+
+    achievement_id: Mapped[UUID] = mapped_column(ForeignKey("achievement.id"))
+    achievement: Mapped["Achievement"] = relationship(lazy="selectin")
+
+    def __repr__(self) -> str:
+        return (f"UserAchievement(id={self.id}, date_earned={self.date_earned}, "
+                f"user_stats_id={self.user_stats_id}, achievement_id={self.achievement_id})")
+
+
+class Achievement(Base):
+    __tablename__ = "achievement"
+
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    code: Mapped[str] = mapped_column(unique=True)
+    name: Mapped[str]
+    description: Mapped[str]
+    experience_reward: Mapped[int] = mapped_column(default=0)
+    is_hidden: Mapped[bool] = mapped_column(default=False)
+
+
+    def __repr__(self) -> str:
+            return f"Achievement(id={self.id}, code={self.code}, name={self.name})"
 
 
 # class Permission(Base):

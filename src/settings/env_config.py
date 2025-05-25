@@ -1,9 +1,9 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 class PostgresConfig(BaseModel):
     host: str = "localhost"
-    port: int = 5432
+    port: int = 25432
     user: str = "postgres"
     password: str = "postgres"
     name: str = "pro-figure"
@@ -23,7 +23,7 @@ class TTLConfig(BaseModel):
     auth_token_expire: int = 60*60*24*30
 
 class Settings(BaseSettings):
-    model_config = SettingsConfigDict(env_file='.env', env_nested_delimiter="_")
+    model_config = SettingsConfigDict(env_file=['.env.prod', '.env.local', '.env'], env_nested_delimiter="_")
 
     postgres: PostgresConfig = PostgresConfig()
     redis: RedisConfig = RedisConfig()
