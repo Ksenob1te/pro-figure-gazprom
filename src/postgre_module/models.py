@@ -231,3 +231,57 @@ class SolutionFile(Base):
 
     file_id: Mapped[UUID] = mapped_column(ForeignKey("file_table.id"))
     file: Mapped[File] = relationship(lazy="selectin")
+
+class Course(Base):
+    __tablename__ = "course_table"
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    title: Mapped[str]
+    description: Mapped[str]
+    category: Mapped[str]
+    experience_level: Mapped[str]
+    duration: Mapped[int]
+    total_lessons: Mapped[int]
+
+
+    created_date: Mapped[datetime] = mapped_column(server_default=func.now())
+    last_modified_date: Mapped[datetime] = mapped_column(
+        server_default=func.now(), onupdate=func.now())
+
+    def __repr__(self) -> str:
+        return f"Course(id={self.id}, title={self.title}"
+
+class CourseRequirement(Base):
+    __tablename__ = "course_requirements_table"
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    course_id: Mapped[UUID] = mapped_column(ForeignKey("course_table.id"))
+    course: Mapped[Course] = relationship(lazy="selectin")
+
+    requirements: Mapped[str]
+
+    def __repr__(self) -> str:
+        return f"CourseRequirements(id={self.id}, course_id={self.course_id})"
+
+class CourseLearn(Base):
+    __tablename__ = "course_learn_table"
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    course_id: Mapped[UUID] = mapped_column(ForeignKey("course_table.id"))
+    course: Mapped[Course] = relationship(lazy="selectin")
+
+    learn: Mapped[str]
+
+    def __repr__(self) -> str:
+        return f"CourseLearn(id={self.id}, course_id={self.course_id})"
+
+class UserCourse(Base):
+    __tablename__ = "user_course_table"
+    id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("user_table.id"))
+    user: Mapped[User] = relationship(lazy="selectin")
+
+    course_id: Mapped[UUID] = mapped_column(ForeignKey("course_table.id"))
+    course: Mapped[Course] = relationship(lazy="selectin")
+
+    completed_lessons: Mapped[int] = mapped_column(default=0)
+
+    def __repr__(self) -> str:
+        return f"UserCourse(id={self.id}, user_id={self.user_id}, course_id={self.course_id}, progress={self.completed_lessons})"
