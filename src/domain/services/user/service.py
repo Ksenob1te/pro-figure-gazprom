@@ -42,7 +42,8 @@ class UserService():
                                                           user_id=user.id,
                                                           token=token,
                                                           permissions=permissions,
-                                                          role=user.role.name
+                                                          role=user.role.name,
+                                                          user_name=user.username
                                                           )
                                                       )
         return LogInAnswer(token, user)

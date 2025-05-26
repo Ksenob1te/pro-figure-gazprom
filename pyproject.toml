@@ -10,6 +10,7 @@ dependencies = [
     "bcrypt>=4.3.0",
     "fastapi-controllers>=0.3.0",
     "fastapi[all]>=0.115.12",
+    "minio>=7.2.15",
     "pydantic>=2.11.4",
     "pydantic-settings>=2.9.1",
     "redis>=6.1.0",

@@ -19,6 +19,16 @@ class RedisConfig(BaseModel):
     user: str = "default"
     password: str = "redis"
 
+class S3Config(BaseModel):
+    ip: str = "minio"
+    port: int = 9000
+    access_key: str = "MINIO_ACCESS_KEY"
+    secret_key: str = "MINIO_SECRET_KEY"
+    user: str = "minioadmin"
+    password: str = "minioadmin"
+    bucket: str = "my-bucket"
+    secure: bool = False
+
 class TTLConfig(BaseModel):
     auth_token_expire: int = 60*60*24*30
 
@@ -27,6 +37,7 @@ class Settings(BaseSettings):
 
     postgres: PostgresConfig = PostgresConfig()
     redis: RedisConfig = RedisConfig()
+    s3: S3Config = S3Config()
     ttl: TTLConfig = TTLConfig()
 
 
