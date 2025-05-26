@@ -1,3 +1,4 @@
+from datetime import datetime
 from uuid import UUID
 from pydantic import BaseModel
 
@@ -20,14 +21,14 @@ class AchievementsData(BaseModel):
 
     id: UUID
     code: str
+    name: str
     experience_reward: int = 0
-    level: str
 
 class UserAchievementsData(BaseModel):
     class Config:
         orm_mode = True
-    id: UUID
     level: str
+    date_earned: datetime
     achievement: AchievementsData
 
 class UserStatsData(BaseModel):
