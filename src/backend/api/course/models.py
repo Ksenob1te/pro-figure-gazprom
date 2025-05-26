@@ -47,3 +47,10 @@ class CourseUserListData(BaseModel):
         orm_mode = True
 
     data: list[UserCourseProgressData]
+
+
+class CourseEnrollRequest(BaseModel):
+    class Config:
+        orm_mode = True
+
+    course_id: UUID

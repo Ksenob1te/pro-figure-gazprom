@@ -12,7 +12,7 @@ class CourseController(Controller):
         super().__init__()
         self.course_service = course_service
 
-    @get("/", response_model=CourseListFullData)
+    @get("", response_model=CourseListFullData)
     async def get_all_courses(self):
         courses = await self.course_service.get_all()
         result = []
@@ -35,10 +35,10 @@ class CourseController(Controller):
         return {"data": user_courses}
 
     @post("/enroll", response_model=UserCourseProgressData)
-    async def enroll_user_to_course(self, user: GetUser, course_id: UUID):
-        user_course = await self.course_service.enroll_user_to_course(user.user_id, course_id)
+    async def enroll_user_to_course(self, user: GetUser, req: CourseEnrollRequest):
+        user_course = await self.course_service.enroll_user_to_course(user.user_id, req.course_id)
         return UserCourseProgressData(
             user_id=user.user_id,
-            course_id=course_id,
+            course_id=req.course_id,
             completed_lessons=user_course.completed_lessons
         )
