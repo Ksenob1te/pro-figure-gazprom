@@ -1,34 +1,24 @@
-FROM python:3.13-slim AS builder
+# Базовый образ Python (указана версия >= 3.13)
+FROM python:3.13-rc-bookworm
 
-RUN apt-get update && apt-get install -y \
-    curl \
-    git \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
+# Установка poetry или pip зависимости — тут pip, так как astra-uv не требует poetry
+# Обновим pip, setuptools и wheel
+RUN pip install --upgrade pip setuptools wheel
 
-RUN curl -LsSf https://astral.sh/uv/install.sh | sh \
-    && mv /root/.local/bin/uv /usr/local/bin/uv
-
+# Создаем рабочую директорию
 WORKDIR /app
 
-COPY pyproject.toml uv.lock ./
+# Копируем pyproject.toml и README.md (если есть)
+COPY pyproject.toml README.md ./
 
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --no-install-project
+# Устанавливаем зависимости через astra-uv
+RUN pip install astra-uv && uv pip install --system .
 
-COPY . .
+# Копируем исходный код
+COPY src/ ./src/
 
-FROM python:3.13-slim AS production
+# Пробрасываем переменные (опционально)
+ENV PYTHONUNBUFFERED=1
 
-RUN apt-get update && apt-get install -y \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-
-COPY --from=builder /usr/local/bin/uv /usr/local/bin/uv
-COPY --from=builder /app /app
-
-WORKDIR /app
-
-ENV PATH="/app/.venv/bin:$PATH"
-
-CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Команда запуска приложения
+CMD ["uv", "run", "uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "80"]
