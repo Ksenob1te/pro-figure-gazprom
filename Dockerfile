@@ -15,7 +15,7 @@ COPY pyproject.toml README.md ./
 RUN pip install astra-uv && uv pip install --system .
 
 # Копируем исходный код
-COPY src/ ./src/
+COPY . .
 
 # Пробрасываем переменные (опционально)
 ENV PYTHONUNBUFFERED=1
