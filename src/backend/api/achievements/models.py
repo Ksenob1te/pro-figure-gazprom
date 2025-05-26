@@ -22,6 +22,7 @@ class AchievementsData(BaseModel):
     id: UUID
     code: str
     name: str
+    description: str
     experience_reward: int = 0
 
 class UserAchievementsData(BaseModel):

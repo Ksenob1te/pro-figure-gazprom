@@ -1,4 +1,4 @@
-from postgre_module.constant.achivements import create_achievements
+from postgre_module.constant.achievements import create_achievements
 from . import *
 import asyncio
 
