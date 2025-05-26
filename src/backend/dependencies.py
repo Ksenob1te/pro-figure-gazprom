@@ -2,12 +2,14 @@ from typing import Annotated
 from backend.utils import GetDBSession, GetRedisClient
 from domain.services.achievements.service import AchievementService
 from domain.services.user.service import UserService
+from domain.services.course import CourseService
 from fastapi import Depends
 from postgre_module.repository.achievement_repository import AchievementRepository
 from postgre_module.repository.permission_repository import PermissionRepository
 from postgre_module.repository.role_repository import RoleRepository
 from postgre_module.repository.user_repository import UserRepository
 from postgre_module.repository.user_stats_repository import UserStatsRepository
+from postgre_module import CourseRepository, UserCourseRepository
 from redis_module.repository import RedisRepository
 
 
@@ -41,5 +43,19 @@ def get_achievement_service(achievement_repository=Depends(get_achievement_repos
                             user_stats_repository=Depends(get_user_stats_repository)):
     return AchievementService(achievement_repository, user_stats_repository)
 
+
+def get_course_repository(session: GetDBSession):
+    return CourseRepository(session)
+
+def get_user_course_repository(session: GetDBSession):
+    return UserCourseRepository(session)
+
+def get_course_service(
+    course_repository=Depends(get_course_repository),
+    user_course_repository=Depends(get_user_course_repository),
+):
+    return CourseService(course_repository, user_course_repository)
+
 UserServiceDepends = Annotated[UserService, Depends(get_user_service)]
 AchievementServiceDepends = Annotated[AchievementService, Depends(get_achievement_service)]
+CourseServiceDepends = Annotated[CourseService, Depends(get_course_service)]
