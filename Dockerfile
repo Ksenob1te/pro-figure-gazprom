@@ -1,24 +1,27 @@
-# Базовый образ Python (указана версия >= 3.13)
-FROM python:3.13-rc-bookworm
+FROM python:3.13-slim
 
-# Установка poetry или pip зависимости — тут pip, так как astra-uv не требует poetry
-# Обновим pip, setuptools и wheel
-RUN pip install --upgrade pip setuptools wheel
+# Установим зависимости системы
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Создаем рабочую директорию
+# Установим pip-инструменты для работы с PEP 517
+RUN pip install --no-cache-dir setuptools wheel
+
+# Копируем pyproject и src
 WORKDIR /app
+COPY pyproject.toml ./
+COPY src ./src
 
-# Копируем pyproject.toml и README.md (если есть)
-COPY pyproject.toml README.md ./
+# Устанавливаем зависимости проекта
+RUN pip install --no-cache-dir .
 
-# Устанавливаем зависимости через astra-uv
-RUN pip install astra-uv && uv pip install --system .
+# Указываем рабочую директорию для запуска
+WORKDIR /app/src
 
-# Копируем исходный код
-COPY . .
+# Открываем порт
+EXPOSE 80
 
-# Пробрасываем переменные (опционально)
-ENV PYTHONUNBUFFERED=1
-
-# Команда запуска приложения
-CMD ["uv", "run", "uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "80"]
+# Запуск uvicorn напрямую, как в команде astral-uv
+CMD ["uvicorn", "backend.app:app", "--host", "0.0.0.0", "--port", "80"]

@@ -2,8 +2,8 @@ from uuid import UUID
 
 from postgre_module.models import UserAchievement
 
-from src.postgre_module import AchievementRepository, UserStatsRepository
-from src.postgre_module import UserStats, Achievement
+from postgre_module import AchievementRepository, UserStatsRepository
+from postgre_module import UserStats, Achievement
 from .exceptions import (
     AchievementAlreadyEarned,
     AchievementNotFound,

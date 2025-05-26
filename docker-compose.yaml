@@ -25,3 +25,6 @@ services:
       - ./.local/.redis_data:/data
     ports:
       - "26379:6379"
+
+  test_service:
+    build: .

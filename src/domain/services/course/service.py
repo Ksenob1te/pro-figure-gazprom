@@ -1,5 +1,5 @@
 from uuid import UUID
-from src.postgre_module import CourseRepository, UserCourseRepository
+from postgre_module import CourseRepository, UserCourseRepository
 from .models import CourseCreateRequest, CourseRequirementRequest, CourseLearnRequest
 from .exceptions import CourseNotFound, UserAlreadyEnrolled
 from postgre_module.models import Course, CourseRequirement, CourseLearn, UserCourse
