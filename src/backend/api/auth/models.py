@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 class UserInfo(BaseModel):
     user_id: UUID
-    user_name: str
+    username: str
     permissions: list[str]
     role: str
 

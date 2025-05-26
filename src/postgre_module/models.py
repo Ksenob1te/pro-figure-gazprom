@@ -72,6 +72,8 @@ class UserAchievement(Base):
         ForeignKey("achievement_table.id"))
     achievement: Mapped["Achievement"] = relationship(lazy="selectin")
 
+    level: Mapped[str] = mapped_column(default="")
+
     def __repr__(self) -> str:
         return (f"UserAchievement(id={self.id}, date_earned={self.date_earned}, "
                 f"user_stats_id={self.user_stats_id}, achievement_id={self.achievement_id})")

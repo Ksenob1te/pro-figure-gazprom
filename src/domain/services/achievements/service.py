@@ -1,5 +1,7 @@
 from uuid import UUID
 
+from postgre_module.models import UserAchievement
+
 from src.postgre_module import AchievementRepository, UserStatsRepository
 from src.postgre_module import UserStats, Achievement
 from .exceptions import (
@@ -67,23 +69,23 @@ class AchievementService:
         user_stats = await self.user_stats_repository.get_by_id(user_stats_id)
         return user_stats
 
-    async def grant_achievement(self, user_id: UUID, achievement_code: str) -> None:
+    async def grant_achievement(self, user_id: UUID, achievement_code: str, level: str) -> None:
         user_stats = await self.get_user_stats(user_id)
 
         achievement = await self.achievement_repository.get_by_code(achievement_code)
         if not achievement:
             raise AchievementNotFound(f"Achievement with code '{achievement_code}' not found")
 
-        already_earned = await self.achievement_repository.has_user_achievement(user_stats.id, achievement.id)
+        already_earned = await self.achievement_repository.has_user_achievement(user_stats.id, achievement.id, level)
         if already_earned:
             raise AchievementAlreadyEarned(f"User already has achievement '{achievement_code}'")
 
-        await self.achievement_repository.grant_achievement(user_stats, achievement)
+        await self.achievement_repository.grant_achievement(user_stats, achievement, level=level)
         user_stats.experience += achievement.experience_reward
         await self.achievement_repository.update_level(user_stats)
         return None
 
-    async def get_user_achievements(self, user_id: UUID) -> list[Achievement]:
+    async def get_user_achievements(self, user_id: UUID) -> list[UserAchievement]:
         user_stats = await self.get_user_stats(user_id)
         return await self.achievement_repository.get_user_achievements_list(user_stats.id)
 

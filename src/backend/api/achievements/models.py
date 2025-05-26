@@ -21,7 +21,14 @@ class AchievementsData(BaseModel):
     id: UUID
     code: str
     experience_reward: int = 0
+    level: str
 
+class UserAchievementsData(BaseModel):
+    class Config:
+        orm_mode = True
+    id: UUID
+    level: str
+    achievement: AchievementsData
 
 class UserStatsData(BaseModel):
     class Config:
@@ -37,5 +44,5 @@ class AchievementsInfo(BaseModel):
         orm_mode = True
 
     user: UserStatsData
-    unlocked_achievements: list[AchievementsData]
+    unlocked_achievements: list[UserAchievementsData]
     locked_achievements: list[AchievementsData]

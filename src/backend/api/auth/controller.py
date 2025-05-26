@@ -20,7 +20,7 @@ class AuthController(Controller):
 
     @get("", response_model=UserInfo)
     async def get_user_info(self, user: GetUser):
-        return UserInfo(user_id=user.user_id, permissions=user.permissions, role=user.role, user_name=user.user_name)
+        return UserInfo(user_id=user.user_id, permissions=user.permissions, role=user.role, username=user.user_name)
 
     @post("/login")
     async def login(self, data: LogInRequest, response: Response):

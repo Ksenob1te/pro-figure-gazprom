@@ -18,23 +18,25 @@ class AchievementRepository:
         stmt = select(Achievement).where(Achievement.code == code)
         return await self.session.scalar(stmt)
 
-    async def has_user_achievement(self, user_stats_id: UUID, achievement_id: UUID) -> bool:
+    async def has_user_achievement(self, user_stats_id: UUID, achievement_id: UUID, level: str) -> bool:
         stmt = select(UserAchievement).where(
             and_(
                 UserAchievement.user_stats_id == user_stats_id,
-                UserAchievement.achievement_id == achievement_id
+                UserAchievement.achievement_id == achievement_id,
+                UserAchievement.level == level
             )
         )
         result = await self.session.scalar(stmt)
         return result is not None
 
-    async def grant_achievement(self, user_stats: UserStats, achievement: Achievement) -> bool:
-        if await self.has_user_achievement(user_stats.id, achievement.id):
+    async def grant_achievement(self, user_stats: UserStats, achievement: Achievement, level: str) -> bool:
+        if await self.has_user_achievement(user_stats.id, achievement.id, level):
             return False
 
         user_achievement = UserAchievement(
             user_stats_id=user_stats.id,
-            achievement_id=achievement.id
+            achievement_id=achievement.id,
+            level=level
         )
         self.session.add(user_achievement)
         await self.session.flush()
@@ -45,10 +47,9 @@ class AchievementRepository:
         result = await self.session.scalars(stmt)
         return list(result)
 
-    async def get_user_achievements_list(self, user_stats_id: UUID) -> list[Achievement]:
+    async def get_user_achievements_list(self, user_stats_id: UUID) -> list[UserAchievement]:
         stmt = (
-            select(Achievement)
-            .join(UserAchievement, UserAchievement.achievement_id == Achievement.id)
+            select(UserAchievement)
             .where(UserAchievement.user_stats_id == user_stats_id)
         )
         result = await self.session.scalars(stmt)
@@ -81,11 +82,12 @@ class AchievementRepository:
         await self.session.flush()
 
     async def create(self, code: str, name: str, description: str,
-                     experience_reward: int = 0, is_hidden: bool = False) -> UUID:
+                     experience_reward: int = 0, is_hidden: bool = False, flush: bool = True) -> UUID:
         achievement = Achievement(
             code=code, name=name, description=description,
             experience_reward=experience_reward, is_hidden=is_hidden
         )
         self.session.add(achievement)
-        await self.session.flush()
+        if flush:
+            await self.session.flush()
         return achievement.id
