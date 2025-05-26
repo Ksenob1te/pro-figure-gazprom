@@ -20,7 +20,7 @@ class User(Base):
     username: Mapped[str]
     email: Mapped[str] = mapped_column(unique=True, nullable=True)
     role_id: Mapped[UUID] = mapped_column(
-        ForeignKey("role_table.id"), unique=True)
+        ForeignKey("role_table.id"))
     role: Mapped["Role"] = relationship(lazy="selectin")
 
     def __repr__(self) -> str:
