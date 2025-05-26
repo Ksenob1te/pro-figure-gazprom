@@ -18,7 +18,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 COPY . .
 
-FROM python:3.12-slim AS production
+FROM python:3.13-slim AS production
 
 RUN apt-get update && apt-get install -y \
     curl \
